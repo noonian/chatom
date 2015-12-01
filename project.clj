@@ -5,23 +5,28 @@
             :url "http://opensource.org/licenses/MIT"
             :year 2015
             :key "mit"}
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.170"]
+  :dependencies [;; common
+                 [org.clojure/clojure "1.7.0"]
+                 [org.clojure/clojurescript "1.7.170" :scope "test"]
                  [org.clojure/core.async "0.2.374"]
-                 [sablono "0.3.6"]
-                 [org.omcljs/om "1.0.0-alpha25-SNAPSHOT"]
-                 [sablono "0.4.0"]
                  [bidi "1.21.1"]
-                 [kibu/pushy "0.3.6"]
-                 [com.stuartsierra/component "0.3.1"]
+                 [levand/immuconf "0.1.0"]
+
+                 ;; server
                  [aleph "0.4.1-beta2"]
                  [buddy "0.8.1"]
-                 [yesql "0.5.1"]
-                 [duct/hikaricp-component "0.1.0"]
+                 [com.stuartsierra/component "0.3.1"]
                  [com.h2database/h2 "1.4.190"]
-                 [levand/immuconf "0.1.0"]
+                 [duct/hikaricp-component "0.1.0"]
                  [ring/ring "1.4.0"]
-                 [ring-middleware-format "0.7.0"]]
+                 [ring-middleware-format "0.7.0"]
+                 [yesql "0.5.1"]
+
+                 ;; web
+                 [org.omcljs/om "1.0.0-alpha25-SNAPSHOT" :scope "test"]
+                 [sablono "0.4.0" :scope "test"]
+                 [kibu/pushy "0.3.6" :scope "test"]
+                 [devcards "0.2.1" :scope "test"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-1"]]
   :source-paths ["src/server" "src/common"]
