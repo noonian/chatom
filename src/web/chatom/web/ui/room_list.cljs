@@ -21,7 +21,7 @@
   (render [this]
     (let [{:keys [rooms]} (om/props this)]
       (html
-       [:ul
+       [:ul.room-list
         (for [r rooms]
           [:li {:key (:id r)}
            (room r)])]))))
