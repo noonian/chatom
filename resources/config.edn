@@ -1,0 +1,1 @@
+{:database {:uri "jdbc:h2:file:./data/dev"}}
