@@ -30,6 +30,8 @@
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-1"]]
   :source-paths ["src/server" "src/common"]
+  :profiles {:dev {:source-paths ["src/dev"]
+                   :dependencies [[reloaded.repl "0.2.1"]]}}
   :clean-targets ^{:protect false} ["target"
                                     "resources/public/js/compiled"
                                     "resources/public/devcards/js/compiled"]
