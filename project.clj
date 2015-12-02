@@ -18,6 +18,8 @@
                  [com.stuartsierra/component "0.3.1"]
                  [com.h2database/h2 "1.4.190"]
                  [duct/hikaricp-component "0.1.0"]
+                 [joplin.core "0.3.4"]
+                 [joplin.jdbc "0.3.4"]
                  [ring/ring "1.4.0"]
                  [ring-middleware-format "0.7.0"]
                  [yesql "0.5.1"]
@@ -35,6 +37,12 @@
   :clean-targets ^{:protect false} ["target"
                                     "resources/public/js/compiled"
                                     "resources/public/devcards/js/compiled"]
+  :aliases {"migrate-db" ["run" "-m" "chatom.db.joplin/migrate-db"]
+            "seed-db" ["run" "-m" "chatom.db.joplin/seed-db"]
+            "rollback-db" ["run" "-m" "chatom.db.joplin/rollback-db"]
+            "reset-db" ["run" "-m" "chatom.db.joplin/reset-db"]
+            "pending-migrations" ["run" "-m" "chatom.db.joplin/pending-migrations"]
+            "create-migration" ["run" "-m" "chatom.db.joplin/create-migration"]}
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src/web" "src/common"]

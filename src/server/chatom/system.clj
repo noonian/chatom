@@ -4,15 +4,16 @@
             [chatom.component.immuconf :as immuconf]
             [duct.component.hikaricp :as hikaricp]))
 
+(defn new-config [env]
+  (immuconf/new-config
+   (cond-> ["resources/config.edn"]
+     (= env :prod) (conj "resources/prod.edn"))))
+
 (defn new-system
   ([] (new-system :dev))
   ([env]
-   (let [config-resources (cond-> ["resources/config.edn"]
-                            (= env :prod) (conj "resources/prod.edn"))
-         config (immuconf/new-config config-resources)
-         ;; we need some runtime config before actually starting the sytem
-         started (component/start config)
-         db-uri (immuconf/get started :database :uri)]
+   (let [config (new-config env)
+         db-uri (immuconf/get config :database :uri)]
      (component/system-using
       (component/system-map
        :config config

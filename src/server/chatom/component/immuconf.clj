@@ -3,17 +3,12 @@
             [immuconf.config :as immuconf])
   (:refer-clojure :exclude [get]))
 
-(defrecord ImmuconfConfig [resources config]
-  component/Lifecycle
-  (start [this]
-    (if config
-      this
-      (assoc this :config (apply immuconf/load resources))))
-  (stop [this]
-    (assoc this :config nil)))
+(defrecord ImmuconfConfig [resources config])
 
 (defn new-config [resources]
-  (map->ImmuconfConfig {:resources resources}))
+  (map->ImmuconfConfig
+   {:resources resources
+    :config (apply immuconf/load resources)}))
 
 (defn get [component & kws]
   (apply immuconf/get (:config component) kws))
