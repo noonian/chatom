@@ -23,14 +23,16 @@
                  [yesql "0.5.1"]
 
                  ;; web
+                 [devcards "0.2.1" :scope "test"]
                  [org.omcljs/om "1.0.0-alpha25-SNAPSHOT" :scope "test"]
-                 [sablono "0.4.0" :scope "test"]
                  [kibu/pushy "0.3.6" :scope "test"]
-                 [devcards "0.2.1" :scope "test"]]
+                 [sablono "0.4.0" :scope "test"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-1"]]
   :source-paths ["src/server" "src/common"]
-  :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
+  :clean-targets ^{:protect false} ["target"
+                                    "resources/public/js/compiled"
+                                    "resources/public/devcards/js/compiled"]
   :cljsbuild {:builds
               [{:id "dev"
                 :source-paths ["src/web" "src/common"]
@@ -39,6 +41,14 @@
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/chatom.js"
                            :output-dir "resources/public/js/compiled/out"
+                           :source-map-timestamp true}}
+               {:id "devcards"
+                :source-paths ["src/web" "src/common" "src/devcards"]
+                :figwheel {:devcards true}
+                :compiler {:main chatom.web.devcards
+                           :asset-path "js/compiled/out"
+                           :output-to "resources/public/devcards/js/compiled/chatom-devcards.js"
+                           :output-dir "resources/public/devcards/js/compiled/out"
                            :source-map-timestamp true}}
                {:id "min"
                 :source-paths ["src/web" "src/common"]

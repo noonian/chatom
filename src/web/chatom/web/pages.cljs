@@ -1,5 +1,6 @@
 (ns chatom.web.pages
-  (:require [om.next :as om]))
+  (:require [om.next :as om]
+            [chatom.web.routes :as routes]))
 
 (defn map-vals [f m]
   (into {} (for [[k v] m] [k (f v)])))
