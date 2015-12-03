@@ -1,6 +1,5 @@
 (ns chatom.parser
-  (:require [om.next.server :as om]
-            [clojure.tools.logging :as log])
+  (:require [om.next.server :as om])
   (:refer-clojure :exclude [read]))
 
 (defn dispatch [_ k _] k)
@@ -11,13 +10,14 @@
 
 (defmethod read :default
   [{:keys [db query]} key params]
-  (log/debug "default read called")
+  (println "default read called")
   {:value "not-found"})
 
 (defmethod mutate :default
   [{:keys [db query]} key params]
-  (log/debug "default mutate called")
-  {})
+  (println "default mutate called")
+  {:action #(do
+              "foo!")})
 
 (def parser
   (om/parser {:read read :mutate mutate}))

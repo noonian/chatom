@@ -16,9 +16,14 @@
         msg #(str lhyphens % rhyphens)]
     (println (msg "new ring request"))
     (pprint req)
-    (println (msg "end ring request"))
     (when-let [body (:body req)]
-      (pprint (str (slurp body))))))
+      (pprint (str (slurp body))))
+    (println (msg "end ring request"))))
+
+(defn wrap-spy [handler]
+  (fn [req]
+    (print-request req)
+    (handler req)))
 
 (def routes
   ["/" {"api" :api}])
@@ -28,13 +33,18 @@
    (response/resource-response "index.html" {:root "public"})
    "text/html"))
 
-(defn remote-api-response [{:keys [db-pool] :as deps} {:keys [params] :as req}]
+(defn remote-api-response [{:keys [db-pool] :as deps} {:keys [body-params] :as req}]
+  (println "remote-api-response called")
   (let [env {:db (:spec db-pool)}
-        res (parser/parser env (:remote params))]
+        query (:body-params req)
+        res (parser/parser env query)]
+    (println "remote-api result:")
+    (pprint res)
     (response/response res)))
 
 (defn handler [deps]
   (let [api-handler (-> #(remote-api-response deps %)
+                        #_wrap-spy
                         wrap-transit-json-params
                         wrap-transit-json-response)]
     (fn [req]

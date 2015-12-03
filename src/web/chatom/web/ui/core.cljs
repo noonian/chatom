@@ -10,4 +10,8 @@
   Object
   (render [this]
     (html
-     [:div [:h1 "Welcome to ChatOm"]])))
+     [:div
+      [:h1 "Welcome to ChatOm"]
+      [:a {:href "javascript:void(0)"
+           :on-click #(om/transact! this '[(remote/test!)])}
+       "Test Om.next remote"]])))

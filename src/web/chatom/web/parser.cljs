@@ -9,5 +9,9 @@
 
 (defmulti mutate om/dispatch)
 
+(defmethod mutate :default
+  [{:keys [ast] :as env} key params]
+  {:remote ast})
+
 (defonce parser
   (om/parser {:read read :mutate mutate}))
