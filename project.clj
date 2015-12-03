@@ -20,6 +20,7 @@
                  [com.h2database/h2 "1.4.190"]
                  [duct/hikaricp-component "0.1.0"]
                  [honeysql "0.6.2"]
+                 [http-kit "2.1.18"]
                  [joplin.core "0.3.4"]
                  [joplin.jdbc "0.3.4"]
                  [ch.qos.logback/logback-classic "1.1.3"]
