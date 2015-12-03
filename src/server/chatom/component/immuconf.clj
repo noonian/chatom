@@ -1,6 +1,5 @@
 (ns chatom.component.immuconf
-  (:require [com.stuartsierra.component :as component]
-            [immuconf.config :as immuconf])
+  (:require [immuconf.config :as immuconf])
   (:refer-clojure :exclude [get]))
 
 (defrecord ImmuconfConfig [resources config])

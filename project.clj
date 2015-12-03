@@ -18,6 +18,7 @@
                  [com.stuartsierra/component "0.3.1"]
                  [com.h2database/h2 "1.4.190"]
                  [duct/hikaricp-component "0.1.0"]
+                 [honeysql "0.6.2"]
                  [joplin.core "0.3.4"]
                  [joplin.jdbc "0.3.4"]
                  [ring/ring "1.4.0"]

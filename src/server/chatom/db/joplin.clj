@@ -12,11 +12,8 @@
     {:migrators {:sql-mig "resources/joplin/migrators/sql"}
      #_#_:seeds {:sql-seed "seeds.sql/run"}
      :databases {:sql-db {:type :sql :url db-uri}}
-     :environments {:dev [{:db :sql-db
-                           :migrator :sql-mig
-                           #_#_:seed :sql-seed}]
-                    :prod [{:db :sql-db
-                            :migrator :sql-mig}]}}))
+     :environments {:dev [{:db :sql-db :migrator :sql-mig #_#_:seed :sql-seed}]
+                    :prod [{:db :sql-db :migrator :sql-mig}]}}))
 
 (defn migrate-db [env]
   (let [conf (joplin-config env)]
