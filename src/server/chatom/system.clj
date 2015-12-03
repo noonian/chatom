@@ -1,7 +1,7 @@
 (ns chatom.system
   (:require [com.stuartsierra.component :as component]
             [chatom.component.aleph :as aleph]
-            [chatom.component.aleph :as http-kit]
+            [chatom.component.http-kit :as http-kit]
             [chatom.ring-handler :as ring-handler]
             [chatom.component.immuconf :as immuconf]
             [duct.component.hikaricp :as hikaricp]))

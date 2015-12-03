@@ -1,6 +1,6 @@
 (ns chatom.component.http-kit
   (:require [com.stuartsierra.component :as component]
-            [org.http-kit.server :as http]
+            [org.httpkit.server :as http]
             [ring.util.response :as response]
             [clojure.tools.logging :as log]))
 
