@@ -1,1 +1,2 @@
-{:database {:uri "jdbc:h2:file:./data/dev"}}
+{:database {:uri "jdbc:h2:file:./data/dev"}
+ :server {:port 8080}}

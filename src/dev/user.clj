@@ -12,7 +12,7 @@
             [chatom.db.user :as users]
             [chatom.db.room :as room]))
 
-(reloaded.repl/set-init! #(system/new-system :dev))
+(reloaded.repl/set-init! #(system/new-system (system/new-config :dev)))
 
 (defn config [& kws]
   (apply immuconf/get (:config system) kws))

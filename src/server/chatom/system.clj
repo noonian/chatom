@@ -10,13 +10,13 @@
      (= env :prod) (conj "resources/prod.edn"))))
 
 (defn new-system
-  ([] (new-system :dev))
-  ([env]
-   (let [config (new-config env)
-         db-uri (immuconf/get config :database :uri)]
+  ([] (new-system (new-config :dev)))
+  ([config]
+   (let [db-uri (immuconf/get config :database :uri)
+         port (immuconf/get config :server :port)]
      (component/system-using
       (component/system-map
        :config config
        :db-pool (hikaricp/hikaricp {:uri db-uri})
-       :http-server (aleph/new-server {:port 8080}))
+       :http-server (aleph/new-server {:port port}))
       {:http-server [:config :db-pool]}))))
