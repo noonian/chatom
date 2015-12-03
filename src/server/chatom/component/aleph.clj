@@ -1,7 +1,8 @@
 (ns chatom.component.aleph
   (:require [com.stuartsierra.component :as component]
             [aleph.http :as http]
-            [ring.util.response :as response]))
+            [ring.util.response :as response]
+            [clojure.tools.logging :as log]))
 
 (def not-found (response/not-found "Not found"))
 
@@ -14,10 +15,13 @@
             handler (if handler-fn
                       (handler-fn this)
                       (constantly not-found))]
+        (log/info (str "aleph server starting on port " port))
         (assoc this :aleph-connection (http/start-server handler {:port port})))))
   (stop [this]
     (when aleph-connection
-      (.close aleph-connection))
+      (log/info "shutting down aleph server...")
+      (.close aleph-connection)
+      (log/info "aleph server shutdown."))
     (assoc this :aleph-connection nil)))
 
 (defn new-server

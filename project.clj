@@ -21,8 +21,10 @@
                  [honeysql "0.6.2"]
                  [joplin.core "0.3.4"]
                  [joplin.jdbc "0.3.4"]
+                 [ch.qos.logback/logback-classic "1.1.3"]
                  [ring/ring "1.4.0"]
                  [ring-middleware-format "0.7.0"]
+                 [org.clojure/tools.logging "0.3.1"]
                  [yesql "0.5.1"]
 
                  ;; web
