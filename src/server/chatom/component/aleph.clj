@@ -19,9 +19,8 @@
         (assoc this :aleph-connection (http/start-server handler {:port port})))))
   (stop [this]
     (when aleph-connection
-      (log/info "shutting down aleph server...")
-      (.close aleph-connection)
-      (log/info "aleph server shutdown."))
+      (log/info "shutting down aleph server.")
+      (.close aleph-connection))
     (assoc this :aleph-connection nil)))
 
 (defn new-server

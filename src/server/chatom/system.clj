@@ -1,6 +1,7 @@
 (ns chatom.system
   (:require [com.stuartsierra.component :as component]
             [chatom.component.aleph :as aleph]
+            [chatom.ring-handler :as ring-handler]
             [chatom.component.immuconf :as immuconf]
             [duct.component.hikaricp :as hikaricp]))
 
@@ -18,5 +19,5 @@
       (component/system-map
        :config config
        :db-pool (hikaricp/hikaricp {:uri db-uri})
-       :http-server (aleph/new-server {:port port}))
+       :http-server (aleph/new-server {:handler-fn ring-handler/app :port port}))
       {:http-server [:config :db-pool]}))))

@@ -5,6 +5,7 @@
             :url "http://opensource.org/licenses/MIT"
             :year 2015
             :key "mit"}
+  :offline? true
   :dependencies [;; common
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170" :scope "test"]
@@ -25,13 +26,15 @@
                  [ring/ring "1.4.0"]
                  [ring-middleware-format "0.7.0"]
                  [org.clojure/tools.logging "0.3.1"]
+                 [com.cognitect/transit-clj "0.8.285"]
                  [yesql "0.5.1"]
 
                  ;; web
                  [devcards "0.2.1" :scope "test"]
                  [org.omcljs/om "1.0.0-alpha25-SNAPSHOT" :scope "test"]
                  [kibu/pushy "0.3.6" :scope "test"]
-                 [sablono "0.4.0" :scope "test"]]
+                 [sablono "0.4.0" :scope "test"]
+                 [com.cognitect/transit-cljs "0.8.232"]]
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-figwheel "0.5.0-1"]]
   :source-paths ["src/server" "src/common"]
