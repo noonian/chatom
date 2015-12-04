@@ -32,6 +32,8 @@
     {:html5-history (pushy/pushy (nav-handler this) routes/match-route)})
   (componentWillMount [this]
     (pushy/start! (om/get-state this :html5-history)))
+  (componentWillUnmount [this]
+    (pushy/stop! (om/get-state this :html5-history)))
   (render [this]
     (let [{:keys [:app/navbar]} (om/props this)]
       (html
