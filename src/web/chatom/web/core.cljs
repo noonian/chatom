@@ -41,6 +41,10 @@
     :remotes [:remote]
     :send send}))
 
+(defn parse [query & args]
+  (let [env {:state app-state}]
+    (apply parser/parser env query args)))
+
 (defn mount-components! []
   (om/add-root! reconciler ui/RootView (.getElementById js/document "app")))
 

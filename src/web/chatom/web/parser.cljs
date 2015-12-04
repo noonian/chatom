@@ -8,8 +8,20 @@
   [{:keys [state query]} key params]
   (let [st @state]
     (if-let [[_ v] (find st key)]
-      {:value (om/db->tree query v st)}
+      (let [val (if query (om/db->tree query v st) v)]
+        {:value val})
       {:value "not-found"})))
+
+(defmethod read :app/pages
+  [{:keys [state query]} key params]
+  (let [st @state
+        current-page (get-in st [:app/routing :data :app/current-page])
+        page-id (first current-page)
+        page-query (get query page-id)
+        val (om/db->tree page-query (get-in st current-page) st)]
+    (if page-query
+      {:value [(om/db->tree page-query (get-in st current-page) st)]}
+      {:value [(get-in st current-page)]})))
 
 (defmulti mutate om/dispatch)
 
