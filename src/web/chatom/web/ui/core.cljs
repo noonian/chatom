@@ -19,7 +19,6 @@
   (render [this]
     (let [{:keys [id] :as props} (om/props this)
           render-page (pages/page-id->factory id)]
-      (pprint props)
       (if render-page
         (render-page props)
         (html [:div.page#not-found-page "Page not found"])))))
@@ -48,8 +47,6 @@
     (let [{:keys [:app/routing :app/pages] :as props} (om/props this)
           page-id (get-in routing [:data :app/current-page :id])
           current-page (first (filter #(= page-id (:id %)) pages))]
-      (pprint page-id)
-      (pprint pages)
       (html
        [:div
         (navbar/navbar (:data routing))
