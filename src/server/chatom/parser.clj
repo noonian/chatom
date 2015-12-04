@@ -11,7 +11,7 @@
 (defmethod read :default
   [{:keys [db query]} key params]
   (println "default read called")
-  {:value "not-found"})
+  {})
 
 (defmethod mutate :default
   [{:keys [db query]} key params]
