@@ -3,12 +3,9 @@
             [sablono.core :as sab :refer-macros [html]]))
 
 (defui AboutPage
-  static om/Ident
-  (ident [this props]
-    [:page/about :data])
-  static om/IQuery
-  (query [this]
-    [])
+  ;; static om/Ident
+  ;; (ident [this props]
+  ;;   [(:id props) :data])
   Object
   (render [this]
     (let [props (om/props this)]

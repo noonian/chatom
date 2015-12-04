@@ -1,7 +1,9 @@
 (ns chatom.web.state)
 
+(def initial-page [:page/home :data])
+
 (def init-data
-  {:app/current-page [:page/home :data]
+  {:app/navbar {:data {:nav/current-page initial-page}}
    :app/pages [{:id :page/login}
                {:id :page/home}
                {:id :page/about}

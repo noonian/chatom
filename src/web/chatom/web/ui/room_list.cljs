@@ -1,6 +1,7 @@
 (ns chatom.web.ui.room-list
   (:require [om.next :as om :refer-macros [defui]]
-            [sablono.core :as sab :refer-macros [html]]))
+            [sablono.core :as sab :refer-macros [html]]
+            [chatom.web.routes :as routes]))
 
 (defui Room
   static om/Ident
@@ -12,7 +13,8 @@
   Object
   (render [this]
     (let [{:keys [id name]} (om/props this)]
-      (html [:div.room name]))))
+      (html [:div.room
+             [:a {:href (routes/path-for :page/room :id id)} name]]))))
 
 (def room (om/factory Room))
 
