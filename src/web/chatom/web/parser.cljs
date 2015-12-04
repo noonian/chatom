@@ -1,11 +1,15 @@
 (ns chatom.web.parser
-  (:require [om.next :as om]))
+  (:require [om.next :as om]
+            [cljs.pprint :refer [pprint]]))
 
 (defmulti read om/dispatch)
 
 (defmethod read :default
-  [env key params]
-  {:value "not-found"})
+  [{:keys [state query]} key params]
+  (let [st @state]
+    (if-let [[_ v] (find st key)]
+      {:value (om/db->tree query v st)}
+      {:value "not-found"})))
 
 (defmulti mutate om/dispatch)
 
@@ -22,8 +26,8 @@
      #(swap! state
              (fn [state]
                (-> state
-                   (assoc-in [:app/routing :route/args] args)
-                   (assoc-in [:app/routing :app/current-page] [page-id :data]))))}))
+                   (assoc-in [:app/routing :data :route/args] args)
+                   (assoc-in [:app/routing :data :app/current-page] [page-id :data]))))}))
 
 (defonce parser
   (om/parser {:read read :mutate mutate}))

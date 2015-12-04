@@ -20,12 +20,12 @@
   (fn [match]
     (println "nav event:")
     (pprint match)
-    (om/transact! c `[(app/set-page! ~match)])))
+    (om/transact! c `[(app/set-page! ~match) :app/routing])))
 
 (defui RootView
   static om/IQuery
   (query [this]
-    [{:app/routing [(om/get-query navbar/Navbar)]}
+    [{:app/routing [{:data (om/get-query navbar/Navbar)}]}
      {:app/pages (om/get-query Page)}])
   Object
   (initLocalState [this]
@@ -35,10 +35,10 @@
   (componentWillUnmount [this]
     (pushy/stop! (om/get-state this :html5-history)))
   (render [this]
-    (let [{:keys [:app/navbar]} (om/props this)]
+    (let [{:keys [:app/routing]} (om/props this)]
       (html
        [:div
-        (navbar/navbar navbar)
+        (navbar/navbar (:data routing))
         [:h1 "Welcome to ChatOm"]
         [:a {:href "javascript:void(0)"
              :on-click #(om/transact! this '[(remote/test!)])}

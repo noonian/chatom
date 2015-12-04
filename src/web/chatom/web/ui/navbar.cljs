@@ -1,18 +1,19 @@
 (ns chatom.web.ui.navbar
   (:require [om.next :as om :refer-macros [defui]]
             [sablono.core :as sab :refer-macros [html]]
-            [chatom.web.routes :as routes]))
+            [chatom.web.routes :as routes]
+            [cljs.pprint :refer [pprint]]))
 
 (defui Navbar
   static om/Ident
   (ident [this props]
-    [:app/navbar :data])
+    [:app/routing :data])
   static om/IQuery
   (query [this]
     [{:app/current-page [:id]}])
   Object
   (render [this]
-    (let [{:keys [:app/current-page]} (om/props this)
+    (let [{:keys [:app/current-page] :as props} (om/props this)
           nav-links [[:page/home "Home"]
                      [:page/about "About"]]]
       (html
