@@ -9,7 +9,7 @@
     [:app/navbar :data])
   static om/IQuery
   (query [this]
-    [{:nav/current-page [:id]}])
+    [{:app/current-page [:id]}])
   Object
   (render [this]
     (let [{:keys [:app/current-page]} (om/props this)

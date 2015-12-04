@@ -3,7 +3,8 @@
 (def initial-page [:page/home :data])
 
 (def init-data
-  {:app/navbar {:data {:nav/current-page initial-page}}
+  {:app/routing {:app/current-page initial-page
+                 :route/args nil}
    :app/pages [{:id :page/login}
                {:id :page/home}
                {:id :page/about}
