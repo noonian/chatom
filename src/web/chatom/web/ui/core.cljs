@@ -29,7 +29,7 @@
   (fn [match]
     #_(println "nav event:")
     #_(pprint match)
-    (om/transact! c `[(app/set-page! ~match) :app/routing])))
+    (om/transact! c `[(app/set-page! ~match) :app/routing :app/pages])))
 
 (defui RootView
   static om/IQuery

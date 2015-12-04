@@ -1,7 +1,8 @@
 (ns chatom.web.ui.home
   (:require [om.next :as om :refer-macros [defui]]
             [sablono.core :as sab :refer-macros [html]]
-            [chatom.web.ui.room-list :as room-list]))
+            [chatom.web.ui.room-list :as room-list]
+            [cljs.pprint :refer [pprint]]))
 
 (defui HomePage
   static om/Ident
@@ -15,6 +16,7 @@
   Object
   (render [this]
     (let [props (om/props this)]
+      #_(pprint props)
       (html
        [:div.page#home-page
         "The home page"]))))
