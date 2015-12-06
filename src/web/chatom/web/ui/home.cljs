@@ -10,13 +10,17 @@
     [(:id props) :data])
   static om/IQuery
   (query [this]
-    [:id ;every page must request its id or it won't get props
+    [:id ;every page must request its id or it won't get prop
      {:user/rooms (om/get-query room-list/Room)}
      {:app/rooms (om/get-query room-list/Room)}])
   Object
   (render [this]
     (let [props (om/props this)]
+      #_(println "--------------")
       #_(pprint props)
       (html
        [:div.page#home-page
-        "The home page"]))))
+        "The home page"
+        [:section
+         [:header [:h1 "Joined rooms"]]
+         (room-list/room-list {:rooms (:user/rooms props)})]]))))

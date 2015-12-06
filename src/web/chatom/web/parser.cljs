@@ -2,13 +2,21 @@
   (:require [om.next :as om]
             [cljs.pprint :refer [pprint]]))
 
+(defn denormalize [query value state]
+  (if-not query
+    value
+    (if (and (vector? value)
+             (not (empty? value)))
+      (map #(om/db->tree query % state) value)
+      (om/db->tree query value state))))
+
 (defmulti read om/dispatch)
 
 (defmethod read :default
   [{:keys [state db query ast]} key params]
-  (let [st (or db @state)]
-    (if-let [[_ v] (find st key)]
-      (let [val (if query (om/db->tree query v st) v)]
+  (let [st @state]
+    (if-let [[_ v] (or (find db key) (find st key))]
+      (let [val (denormalize query v st) #_(if query (om/db->tree query v st) v)]
         {:value val})
       {:remote ast})))
 
