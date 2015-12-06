@@ -5,7 +5,7 @@
             :url "http://opensource.org/licenses/MIT"
             :year 2015
             :key "mit"}
-  :offline? true
+  ;; :offline? true
   :dependencies [;; common
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170" :scope "test"]
