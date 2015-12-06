@@ -1,0 +1,2 @@
+{:database {:uri "jdbc:h2:mem:test"}
+ :server {:port 8081}}

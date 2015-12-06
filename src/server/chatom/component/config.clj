@@ -5,7 +5,7 @@
 (defn new-config [env]
   (immuconf/new-config
    (cond-> ["resources/config.edn"]
-     (= env :prod) (conj "resources/test.edn")
+     (= env :test) (conj "resources/test.edn")
      (= env :prod) (conj "resources/prod.edn"))))
 
 (def get immuconf/get)
