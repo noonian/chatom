@@ -24,6 +24,7 @@
                  [joplin.core "0.3.4"]
                  [joplin.jdbc "0.3.4"]
                  [ch.qos.logback/logback-classic "1.1.3"]
+                 [ragtime "0.5.2"]
                  [ring/ring "1.4.0"]
                  [ring-middleware-format "0.7.0"]
                  [org.clojure/tools.logging "0.3.1"]
@@ -32,7 +33,7 @@
 
                  ;; web
                  [devcards "0.2.1" :scope "test"]
-                 [org.omcljs/om "1.0.0-alpha25-SNAPSHOT" :scope "test"]
+                 [org.omcljs/om "1.0.0-alpha26-SNAPSHOT" :scope "test"]
                  [kibu/pushy "0.3.6" :scope "test"]
                  [sablono "0.4.0" :scope "test"]
                  [com.cognitect/transit-cljs "0.8.232"]]
