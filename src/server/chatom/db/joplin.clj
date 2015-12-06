@@ -1,14 +1,13 @@
 (ns chatom.db.joplin
   (:require [joplin.repl :as repl]
-            [chatom.component.immuconf :as immuconf]
-            [chatom.system :as system]))
+            [chatom.component.config :as config]))
 
 ;; -------------------------------------------------------------------
 ;; lein aliases
 
 (defn joplin-config [env]
-  (let [config (system/new-config env)
-        db-uri (immuconf/get config :database :uri)]
+  (let [config (config/new-config env)
+        db-uri (config/get config :database :uri)]
     {:migrators {:sql-mig "resources/joplin/migrators/sql"}
      #_#_:seeds {:sql-seed "seeds.sql/run"}
      :databases {:sql-db {:type :sql :url db-uri}}

@@ -3,19 +3,14 @@
             [chatom.component.aleph :as aleph]
             [chatom.component.http-kit :as http-kit]
             [chatom.ring-handler :as ring-handler]
-            [chatom.component.immuconf :as immuconf]
+            [chatom.component.config :as config]
             [duct.component.hikaricp :as hikaricp]))
 
-(defn new-config [env]
-  (immuconf/new-config
-   (cond-> ["resources/config.edn"]
-     (= env :prod) (conj "resources/prod.edn"))))
-
 (defn new-system
-  ([] (new-system (new-config :dev)))
+  ([] (new-system (config/new-config :dev)))
   ([config]
-   (let [db-uri (immuconf/get config :database :uri)
-         port (immuconf/get config :server :port)]
+   (let [db-uri (config/get config :database :uri)
+         port (config/get config :server :port)]
      (component/system-using
       (component/system-map
        :config config
