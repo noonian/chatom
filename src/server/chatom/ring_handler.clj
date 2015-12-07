@@ -37,9 +37,11 @@
   (println "remote-api-response called")
   (let [env {:db (:spec db-pool)}
         query (:body-params req)
+        _ (pprint query)
         res (parser/parser env query)]
-    (println "remote-api result:")
-    (pprint res)
+    ;; (println "remote-api result:")
+    ;; (pprint query)
+    ;; (pprint res)
     (response/response res)))
 
 (defn handler [deps]

@@ -7,30 +7,41 @@
     value
     (if (and (vector? value)
              (not (empty? value)))
-      (map #(om/db->tree query % state) value)
+      (mapv #(om/db->tree query % state) value)
       (om/db->tree query value state))))
 
 (defmulti read om/dispatch)
 
 (defmethod read :default
   [{:keys [state db query ast]} key params]
-  (let [st @state]
-    (if-let [[_ v] (or (find db key) (find st key))]
-      (let [val (denormalize query v st) #_(if query (om/db->tree query v st) v)]
+  (let [st (or db @state)]
+    (if-let [[_ v] (find st key)]
+      (let [val (denormalize query v @state)]
         {:value val})
       {:remote ast})))
 
 (defmethod read :app/pages
-  [{:keys [parser state query]} key params]
+  [{:keys [ast parser state query]} key params]
   (let [st @state
         current-page-ref (get-in st [:app/routing :data :app/current-page])
         current-page (get-in st current-page-ref)
+        page-id (:id current-page)
         page-query (get query (:id current-page))
         env {:state state :db current-page}
         value (parser env page-query)
-        remote-query (parser env page-query :remote)]
-    {:value [value]
-     :remote (om/query->ast remote-query)}))
+        remote-query (parser env page-query :remote)
+        ;; _ (println "-------------------")
+        ;; _ (pprint remote-query)
+        ;; _ (pprint ast)
+        ;; _ (println "-------------------")
+        ]
+    (cond-> {:value [value]}
+      (not (empty? remote-query))
+      (assoc :remote (update-in ast [:query]
+                       #(into {}
+                          (for [[k v] %
+                                :when (= k page-id)]
+                            [k remote-query])))))))
 
 (defmulti mutate om/dispatch)
 

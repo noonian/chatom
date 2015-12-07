@@ -1,4 +1,4 @@
-CREATE TABLE person(
+"CREATE TABLE person(
 id IDENTITY PRIMARY KEY,
 username VARCHAR(255) NOT NULL,
 crypted_password VARCHAR(255) NOT NULL,
@@ -12,3 +12,4 @@ created_by BIGINT NOT NULL,
 UNIQUE KEY AK_roomname (roomname),
 FOREIGN KEY (created_by) REFERENCES person(id)
 );
+"

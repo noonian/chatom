@@ -5,7 +5,7 @@
             :url "http://opensource.org/licenses/MIT"
             :year 2015
             :key "mit"}
-  ;; :offline? true
+  :offline? true
   :dependencies [;; common
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170" :scope "test"]
@@ -46,7 +46,11 @@
   :clean-targets ^{:protect false} ["target"
                                     "resources/public/js/compiled"
                                     "resources/public/devcards/js/compiled"]
-  :aliases {"migrate-db" ["run" "-m" "chatom.db.joplin/migrate-db"]
+  :aliases {"migrate" ["run" "-m" "chatom.db.lein/migrate!"]
+            "rollback" ["run" "-m" "chatom.db.lein/rollback!"]
+
+
+            "migrate-db" ["run" "-m" "chatom.db.joplin/migrate-db"]
             "seed-db" ["run" "-m" "chatom.db.joplin/seed-db"]
             "rollback-db" ["run" "-m" "chatom.db.joplin/rollback-db"]
             "reset-db" ["run" "-m" "chatom.db.joplin/reset-db"]

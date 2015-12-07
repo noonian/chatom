@@ -3,6 +3,8 @@
   (:require [om.next :as om]
             cljsjs.react.dom ;om won't pull this in unless you require om.dom
             [chatom.web.parser :as parser]
+            [chatom.web.pages :as pages]
+            [chatom.web.ui.home :as home]
             [chatom.web.state :as state]
             [chatom.web.ui.core :as ui]
             [cognitect.transit :as transit]
@@ -27,11 +29,20 @@
          (transit/write (om-transit/writer) data)
          #js {"Content-Type" "application/transit+json"}))
 
+(defn normalize [value]
+  (if (and (vector? value)
+           (not (empty? value)))
+    (map #(om/tree->db ui/RootView % true) value)
+    (om/tree->db ui/RootView value true)))
+
 (defn send [remotes merge-results]
-  (println "reconciler send function called with remotes:")
-  (pprint remotes)
+  ;; (println "reconciler send function called with remotes:")
+  ;; (pprint remotes)
   (when-let [query (:remote remotes)]
-    (post-remote query merge-results)))
+    (post-remote query #(do
+                          #_(println "remote res:")
+                          #_(pprint %)
+                          (merge-results %)))))
 
 (defonce reconciler
   (om/reconciler

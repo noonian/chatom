@@ -10,7 +10,7 @@
     [(:id props) :data])
   static om/IQuery
   (query [this]
-    [:id ;every page must request its id or it won't get prop
+    [:id ;every page must request its id or it won't get props
      {:user/rooms (om/get-query room-list/Room)}
      {:app/rooms (om/get-query room-list/Room)}])
   Object
@@ -22,5 +22,5 @@
        [:div.page#home-page
         "The home page"
         [:section
-         [:header [:h1 "Joined rooms"]]
-         (room-list/room-list {:rooms (:user/rooms props)})]]))))
+         [:header [:h1 "Available rooms"]]
+         (room-list/room-list {:rooms (:app/rooms props)})]]))))

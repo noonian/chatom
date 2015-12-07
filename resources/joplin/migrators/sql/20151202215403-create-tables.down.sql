@@ -1,3 +1,3 @@
-DROP TABLE person
+"DROP TABLE person
 --;;
-DROP TABLE room
+DROP TABLE room"

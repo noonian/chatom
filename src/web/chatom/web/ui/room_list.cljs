@@ -9,12 +9,12 @@
     [:room/by-id (:id props)])
   static om/IQuery
   (query [this]
-    [:id :name])
+    [:id :roomname])
   Object
   (render [this]
-    (let [{:keys [id name]} (om/props this)]
+    (let [{:keys [id roomname]} (om/props this)]
       (html [:div.room
-             [:a {:href (routes/path-for :page/room :id id)} name]]))))
+             [:a {:href (routes/path-for :page/room :id id)} roomname]]))))
 
 (def room (om/factory Room))
 
