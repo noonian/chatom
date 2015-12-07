@@ -29,12 +29,7 @@
         page-query (get query (:id current-page))
         env {:state state :db current-page}
         value (parser env page-query)
-        remote-query (parser env page-query :remote)
-        ;; _ (println "-------------------")
-        ;; _ (pprint remote-query)
-        ;; _ (pprint ast)
-        ;; _ (println "-------------------")
-        ]
+        remote-query (parser env page-query :remote)]
     (cond-> {:value [value]}
       (not (empty? remote-query))
       (assoc :remote (update-in ast [:query]
@@ -54,12 +49,9 @@
   [{:keys [state]} key params]
   (let [page-id (:handler params)
         args (:args params)]
-    {:action
-     #(swap! state
-             (fn [state]
-               (-> state
-                   (assoc-in [:app/routing :data :route/args] args)
-                   (assoc-in [:app/routing :data :app/current-page] [page-id :data]))))}))
+    {:action #(swap! state update-in [:app/routing :data] assoc
+                     :route/args args
+                     :app/current-page [page-id :data])}))
 
 (defonce parser
   (om/parser {:read read :mutate mutate}))
