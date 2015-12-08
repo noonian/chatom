@@ -18,7 +18,9 @@
     (if-let [[_ v] (find st key)]
       (let [val (denormalize query v @state)]
         {:value val})
-      {:remote ast})))
+      (do
+        ;; (pprint ast)
+        {:remote ast #_(assoc ast :query-root true)}))))
 
 (defmethod read :app/pages
   [{:keys [ast parser state query]} key params]
@@ -30,13 +32,21 @@
         env {:state state :db current-page}
         value (parser env page-query)
         remote-query (parser env page-query :remote)]
+    ;; (pprint remote-query)
+    ;; (pprint "meta:")
+    ;; (pprint (meta (second remote-query)))
+    ;; (pprint ast)
     (cond-> {:value [value]}
       (not (empty? remote-query))
-      (assoc :remote (update-in ast [:query]
-                       #(into {}
-                          (for [[k v] %
-                                :when (= k page-id)]
-                            [k remote-query])))))))
+      (assoc
+       :remote (-> (update-in ast [:query]
+                     #(into {}
+                        (for [[k v] %
+                              :when (= k page-id)]
+                          [k remote-query])))
+                   #_(update-in [:children]
+                       (fn [children]
+                         (mapv #(assoc % :query-root true) children))))))))
 
 (defmulti mutate om/dispatch)
 

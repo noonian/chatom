@@ -38,6 +38,20 @@
 (defn send [remotes merge-results]
   ;; (println "reconciler send function called with remotes:")
   ;; (pprint remotes)
+  #_(let [full-query (:remote remotes)
+        {:keys [query rewrite] :as res} (om/process-roots full-query)]
+    (post-remote query
+                 (fn [response]
+                   (let [restructured-response (rewrite response)]
+                     (println "---------")
+                     (pprint res)
+                     (pprint full-query)
+                     (pprint query)
+
+                   ;;   (pprint response)
+                     #_(pprint restructured-response)
+                     (println "----------")))))
+
   (when-let [query (:remote remotes)]
     (post-remote query #(do
                           #_(println "remote res:")
