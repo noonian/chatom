@@ -5,7 +5,7 @@
             :url "http://opensource.org/licenses/MIT"
             :year 2015
             :key "mit"}
-  :offline? true
+  ;; :offline? true
   :dependencies [;; common
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170" :scope "test"]
@@ -36,9 +36,14 @@
                  [org.omcljs/om "1.0.0-alpha26-SNAPSHOT" :scope "test"]
                  [kibu/pushy "0.3.6" :scope "test"]
                  [sablono "0.4.0" :scope "test"]
-                 [com.cognitect/transit-cljs "0.8.232"]]
+                 [com.cognitect/transit-cljs "0.8.232"]
+
+                 ;; web style
+                 [facjure/mesh "0.4.0"]
+                 [com.powernoodle/normalize "0.1.1"]]
   :plugins [[lein-cljsbuild "1.1.1"]
-            [lein-figwheel "0.5.0-1"]]
+            [lein-figwheel "0.5.0-1"]
+            [lein-garden "0.2.6"]]
   :source-paths ["src/server" "src/common"]
   :test-paths ["src/test-server"]
   :profiles {:dev {:source-paths ["src/dev"]
@@ -79,4 +84,9 @@
                            :main chatom.core
                            :optimizations :advanced
                            :pretty-print false}}]}
-  :figwheel {:css-dirs ["resources/public/css"]})
+  :figwheel {:css-dirs ["resources/public/css"]}
+  :garden {:builds [{:id "dev"
+                     :source-paths ["src/style"]
+                     :stylesheet chatom.web.style/chatom-style
+                     :compiler {:output-to "resources/public/css/compiled/chatom.css"
+                                :pretty-print? true}}]})
