@@ -32,9 +32,9 @@
         env {:state state :db current-page}
         value (parser env page-query)
         remote-query (parser env page-query :remote)]
-    (pprint remote-query)
-    (pprint "meta:")
-    (pprint (meta (second remote-query)))
+    ;; (pprint remote-query)
+    ;; (pprint "meta:")
+    ;; (pprint (meta (second remote-query)))
     ;; (pprint ast)
     (cond-> {:value [value]}
       (not (empty? remote-query))

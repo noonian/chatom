@@ -66,7 +66,7 @@
                 :source-paths ["src/web" "src/common"]
                 :figwheel {:on-jsload "chatom.web.core/on-js-reload"}
                 :compiler {:main chatom.web.core
-                           :asset-path "js/compiled/out"
+                           :asset-path "/js/compiled/out"
                            :output-to "resources/public/js/compiled/chatom.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true}}

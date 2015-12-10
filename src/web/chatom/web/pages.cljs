@@ -2,7 +2,8 @@
   (:require [om.next :as om]
             [chatom.web.routes :as routes]
             [chatom.web.ui.home :as home]
-            [chatom.web.ui.about :as about]))
+            [chatom.web.ui.about :as about]
+            [chatom.web.ui.room :as room]))
 
 (defn map-vals [f m]
   (into {} (for [[k v] m] [k (f v)])))
@@ -11,15 +12,11 @@
 
 (def page-id->component
   {:page/home home/HomePage
-   :page/about about/AboutPage})
+   :page/about about/AboutPage
+   :page/room room/RoomPage})
 
 (def page-id->query
   (map-vals om/get-query page-id->component))
 
 (def page-id->factory
   (map-vals om/factory page-id->component))
-
-(def page-id->route
-  (into {}
-    (for [page-id (keys page-id->component)]
-      [page-id (routes/path-for page-id)])))
