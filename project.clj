@@ -33,7 +33,7 @@
 
                  ;; web
                  [devcards "0.2.1" :scope "test"]
-                 [org.omcljs/om "1.0.0-alpha26-SNAPSHOT" :scope "test"]
+                 [org.omcljs/om "1.0.0-alpha26" :scope "test"]
                  [kibu/pushy "0.3.6" :scope "test"]
                  [sablono "0.4.0" :scope "test"]
                  [com.cognitect/transit-cljs "0.8.232"]
