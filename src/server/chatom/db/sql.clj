@@ -9,3 +9,9 @@
 
 (defn run-query [db query & opts]
   (apply jdbc/query db (sql/format query) opts))
+
+(defn map-data [mapping data]
+  (into {}
+    (for [[k v] data
+          :let [mapped (get mapping k k)]]
+      [mapped v])))

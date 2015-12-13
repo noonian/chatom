@@ -7,6 +7,15 @@
              :from :person
              :where [:= column value]))
 
+(defn list-rooms []
+  (sql/build :select :*
+             :from :room))
+
+(defn list-messages [room-id]
+  (sql/build :select :*
+             :from :message
+             :where [:= :room_id room-id]))
+
 (defn create-fn
   [table]
   (fn [data]
@@ -14,9 +23,5 @@
         (values [data]))))
 
 (def create-user (create-fn :person))
-
 (def create-room (create-fn :room))
-
-(defn list-rooms []
-  (sql/build :select :*
-             :from :room))
+(def create-message (create-fn :message))

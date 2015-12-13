@@ -1,11 +1,12 @@
-(ns chatom.db.room
+(ns chatom.db.message
   (:require [chatom.db.sql.queries :as queries]
             [chatom.db.sql :as util :refer [run-query execute-query!]]
             [chatom.db.user :as user])
   (:refer-clojure :exclude [list]))
 
 (def field-mapping
-  {:created-by :created_by})
+  {:created-by :created_by
+   :room-id :room_id})
 
 (def inverse-mapping
   (into {}
@@ -13,8 +14,9 @@
       [v k])))
 
 (defn create! [db data]
-  (execute-query! db (queries/create-room (util/map-data field-mapping data))))
+  (let [data (util/map-data field-mapping data)]
+    (execute-query! db (queries/create-message data))))
 
-(defn list [db]
+(defn list [db room-id]
   (map (partial util/map-data inverse-mapping)
-       (run-query db (queries/list-rooms))))
+       (run-query db (queries/list-messages room-id))))

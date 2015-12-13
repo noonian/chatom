@@ -11,7 +11,8 @@
             [honeysql.core :as sql]
             [clojure.java.jdbc :as jdbc]
             [chatom.db.user :as users]
-            [chatom.db.room :as room]))
+            [chatom.db.room :as room]
+            [chatom.db.message :as message]))
 
 (reloaded.repl/set-init! #(system/new-system (config/new-config :dev)))
 
