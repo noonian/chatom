@@ -29,7 +29,7 @@
     [:page/room :data])
   static om/IQuery
   (query [this]
-    [:id {:app/rooms (om/get-query Room)}])
+    [:id {:app/current-room (om/get-query Room)}])
   Object
   (render [this]
     (let [{:keys [:app/rooms]} (om/props this)]

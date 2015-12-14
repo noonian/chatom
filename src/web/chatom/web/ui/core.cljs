@@ -50,6 +50,8 @@
       (html
        [:div
         (navbar/navbar (:data routing))
+        [:div.debug
+         (pr-str props)]
         [:h1 "Welcome to ChatOm"]
         [:a {:href "javascript:void(0)"
              :on-click #(om/transact! this '[(remote/test!)])}

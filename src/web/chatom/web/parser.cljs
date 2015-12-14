@@ -48,20 +48,54 @@
                        (fn [children]
                          (mapv #(assoc % :query-root true) children))))))))
 
+(defmethod read :app/current-room
+  [{:keys [parser state query ast] :as env} key params]
+  (let [st @state
+        link (:app/current-room st)
+        env {:state state}
+        local (om/db->tree query (get-in st link) st)
+        remote (-> (om/query->ast [{link query}])
+                   :children
+                   first
+                   (assoc :query-root true))]
+    #_(pprint local)
+    #_(pprint link)
+    #_(pprint ast)
+    #_(pprint (om/query->ast [{link query}]))
+    {:value local
+     :remote (first (:children (om/query->ast [{link query}])))}))
+
 (defmulti mutate om/dispatch)
 
 (defmethod mutate :default
   [{:keys [ast] :as env} key params]
   {:remote ast})
 
+(defmulti navigated-to (fn [page-id state] page-id))
+
+(defmethod navigated-to :default
+  [page-id state]
+  (println "default navigated-to for page:" page-id)
+  state)
+
+(defmethod navigated-to :page/room
+  [_ state]
+  (println "navigated to :page/room")
+  (let [room-id (long (get-in state [:app/routing :data :route/args :id]))]
+    (assoc state :app/current-room [:room/by-id room-id])))
+
 ;; params will me a bidi match
 (defmethod mutate 'app/set-page!
   [{:keys [state]} key params]
   (let [page-id (:handler params)
-        args (:args params)]
-    {:action #(swap! state update-in [:app/routing :data] assoc
-                     :route/args args
-                     :app/current-page [page-id :data])}))
+        args (:route-params params)]
+    {:action #(swap! state
+                (fn [state]
+                  (navigated-to page-id
+                    (update-in state [:app/routing :data] assoc
+                               :route/args args
+                               :app/current-page [page-id :data])
+                    (navigated-to page-id state))))}))
 
 (defonce parser
   (om/parser {:read read :mutate mutate}))
