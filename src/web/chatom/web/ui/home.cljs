@@ -16,8 +16,7 @@
   Object
   (render [this]
     (let [props (om/props this)]
-      #_(println "--------------")
-      #_(pprint props)
+      ;; (pprint props)
       (html
        [:div.page#home-page
         "The home page"

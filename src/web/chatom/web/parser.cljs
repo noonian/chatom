@@ -19,7 +19,6 @@
       (let [val (denormalize query v @state)]
         {:value val})
       (do
-        ;; (pprint ast)
         {:remote #_ast (assoc ast :query-root true)}))))
 
 (defmethod read :app/pages
@@ -32,10 +31,6 @@
         env {:state state :db current-page}
         value (parser env page-query)
         remote-query (parser env page-query :remote)]
-    ;; (pprint remote-query)
-    ;; (pprint "meta:")
-    ;; (pprint (meta (second remote-query)))
-    ;; (pprint ast)
     (cond-> {:value [value]}
       (not (empty? remote-query))
       (assoc
@@ -58,12 +53,11 @@
                    :children
                    first
                    (assoc :query-root true))]
-    #_(pprint local)
-    #_(pprint link)
-    #_(pprint ast)
-    #_(pprint (om/query->ast [{link query}]))
+    ;; (println "---------------")
+    ;; (pprint local)
+    ;; (pprint remote)
     {:value local
-     :remote (first (:children (om/query->ast [{link query}])))}))
+     :remote remote}))
 
 (defmulti mutate om/dispatch)
 

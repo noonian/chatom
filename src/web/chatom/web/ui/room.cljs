@@ -32,7 +32,8 @@
     [:id {:app/current-room (om/get-query Room)}])
   Object
   (render [this]
-    (let [{:keys [:app/rooms]} (om/props this)]
+    (let [{:keys [:app/rooms] :as props} (om/props this)]
+      ;; (pprint props)
       (html
        [:div.page#room-page
         "this is the room page"

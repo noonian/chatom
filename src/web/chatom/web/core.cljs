@@ -15,25 +15,26 @@
 
 (def remote-url "/api")
 
+(defn normalize [value]
+  (if (and (vector? value)
+           (not (empty? value)))
+    (map #(om/tree->db ui/RootView % true) value)
+    (om/tree->db ui/RootView value true)))
+
 (defonce app-state
-  (atom state/init-data))
+  (atom (normalize state/init-data)))
 
 (defn post-remote [data cb]
   (.send XhrIo remote-url
          (fn [e]
            (let [xhr (.-target e)
                  response-data (.getResponseText xhr)
-                 response (transit/read (om-transit/reader) response-data)]
-             (cb response)))
+                 response (transit/read (om-transit/reader) response-data)
+                 normalized (normalize response)]
+             (cb normalized)))
          "POST"
          (transit/write (om-transit/writer) data)
          #js {"Content-Type" "application/transit+json"}))
-
-(defn normalize [value]
-  (if (and (vector? value)
-           (not (empty? value)))
-    (map #(om/tree->db ui/RootView % true) value)
-    (om/tree->db ui/RootView value true)))
 
 (defn send [remotes merge-results]
   ;; (println "reconciler send function called with remotes:")
@@ -62,7 +63,7 @@
   (om/reconciler
    {:state app-state
     :parser parser/parser
-    :normalize true
+    :normalize false
     :remotes [:remote]
     :send send}))
 
