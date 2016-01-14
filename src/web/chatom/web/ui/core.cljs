@@ -7,53 +7,44 @@
             [pushy.core :as pushy]
             [cljs.pprint :refer [pprint]]))
 
-(defui Page
-  static om/Ident
-  (ident [this props]
-    ;; page-id must be first element since it is used in the join query
-    [(:id props) :data])
-  static om/IQuery
-  (query [this]
-    pages/page-id->query)
-  Object
-  (render [this]
-    (let [{:keys [id] :as props} (om/props this)
-          render-page (pages/page-id->factory id)]
-      (if render-page
-        (render-page props)
-        (html [:div.page#not-found-page "Page not found"])))))
-
-(def page (om/factory Page))
-
 (defn nav-handler [c]
   (fn [match]
-    #_(println "nav event:")
-    #_(pprint match)
-    (om/transact! c `[(app/set-page! ~match) :app/routing :app/pages])))
+    (om/transact! c `[(app/set-page! ~match) ~(:handler match)])))
+
+(defn page-joins
+  ([page-queries]
+   (for [[page-id query] pages/page-id->query
+         :when (not (nil? query))]
+     ;; each page is represented as a join
+     {page-id query}))
+  ([page-queries page-id]
+   (page-joins {page-id (get page-queries page-id)})))
 
 (defui RootView
   static om/IQuery
   (query [this]
-    [{:app/routing [{:data (om/get-query navbar/Navbar)}]}
-     {:app/pages (om/get-query Page)}])
+    (into [:app/current-page
+           {:navbar (om/get-query navbar/Navbar)}]
+      (page-joins pages/page-id->query)))
   Object
   (initLocalState [this]
-    {:html5-history (pushy/pushy (nav-handler this) routes/match-route)})
+    (letfn [(on-route-change [match]
+              (om/transact! this `[(app/set-page! ~match) ~(:handler match)]))]
+      {:html5-history (pushy/pushy on-route-change #_(nav-handler this) routes/match-route)}))
   (componentWillMount [this]
     (pushy/start! (om/get-state this :html5-history)))
   (componentWillUnmount [this]
     (pushy/stop! (om/get-state this :html5-history)))
   (render [this]
-    (let [{:keys [:app/routing :app/pages] :as props} (om/props this)
-          page-id (get-in routing [:data :app/current-page :id])
-          current-page (first (filter #(= page-id (:id %)) pages))]
+    (let [{:keys [:app/current-page navbar] :as props} (om/props this)
+          render-page (pages/page-id->factory current-page)
+          page-data (get props current-page)]
       (html
        [:div
-        (navbar/navbar (:data routing))
-        [:div.debug
-         (pr-str props)]
+        (navbar/navbar navbar)
+        [:div.debug (pr-str props)]
         [:h1 "Welcome to ChatOm"]
         [:a {:href "javascript:void(0)"
              :on-click #(om/transact! this '[(remote/test!)])}
          "Test Om.next remote"]
-        (page current-page)]))))
+        (render-page page-data)]))))

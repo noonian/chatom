@@ -24,17 +24,15 @@
 (def room (om/factory Room))
 
 (defui RoomPage
-  static om/Ident
-  (ident [this props]
-    [:page/room :data])
   static om/IQuery
   (query [this]
-    [:id {:app/current-room (om/get-query Room)}])
+    [{:app/current-room (om/get-query Room)}])
   Object
   (render [this]
-    (let [{:keys [:app/rooms]} (om/props this)]
+    (let [{:keys [:app/current-room]} (om/props this)]
       (html
        [:div.page#room-page
         "this is the room page"
-        (when-not (empty? rooms)
+        #_(room current-room)
+        #_(when-not (empty? rooms)
           (room (first rooms)))]))))

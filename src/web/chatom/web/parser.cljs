@@ -1,5 +1,6 @@
 (ns chatom.web.parser
   (:require [om.next :as om]
+            [chatom.web.pages :as pages]
             [cljs.pprint :refer [pprint]]))
 
 (defn denormalize [query value state]
@@ -12,6 +13,26 @@
 
 (defmulti read om/dispatch)
 
+(defn query-from-root [{:keys [parser state query ast] :as env}]
+  (let [env' {:state state}
+        local-val (parser env' query)
+        remote-query (parser env' query :remote)]
+    (cond-> {:value local-val}
+      (seq remote-query) (assoc :remote (assoc ast :query remote-query)))))
+
+(defn routing-read [{:keys [parser state query ast] :as env} key params]
+  (let [st @state
+        current-page (:app/current-page st)]
+    (println current-page)
+    (cond
+
+      (= key current-page) (query-from-root env)
+
+      (contains? pages/page-id->component key) {}
+
+      :else
+      (read env key params))))
+
 (defmethod read :default
   [{:keys [state db query ast]} key params]
   (let [st (or db @state)]
@@ -19,51 +40,23 @@
       (let [val (denormalize query v @state)]
         {:value val})
       (do
-        ;; (pprint ast)
-        {:remote #_ast (assoc ast :query-root true)}))))
+        {:remote (assoc ast :query-root true)}))))
 
-(defmethod read :app/pages
-  [{:keys [ast parser state query]} key params]
-  (let [st @state
-        current-page-ref (get-in st [:app/routing :data :app/current-page])
-        current-page (get-in st current-page-ref)
-        page-id (:id current-page)
-        page-query (get query (:id current-page))
-        env {:state state :db current-page}
-        value (parser env page-query)
-        remote-query (parser env page-query :remote)]
-    ;; (pprint remote-query)
-    ;; (pprint "meta:")
-    ;; (pprint (meta (second remote-query)))
-    ;; (pprint ast)
-    (cond-> {:value [value]}
-      (not (empty? remote-query))
-      (assoc
-       :remote (-> (update-in ast [:query]
-                     #(into {}
-                        (for [[k v] %
-                              :when (= k page-id)]
-                          [k (with-meta remote-query {:query-root true})])))
-                   #_(update-in [:children]
-                       (fn [children]
-                         (mapv #(assoc % :query-root true) children))))))))
+(defmethod read :navbar
+  [env _ _]
+  (query-from-root env))
+
+(def current-page-path [:app/routing :data :app/current-page])
 
 (defmethod read :app/current-room
   [{:keys [parser state query ast] :as env} key params]
   (let [st @state
         link (:app/current-room st)
         env {:state state}
-        local (om/db->tree query (get-in st link) st)
-        remote (-> (om/query->ast [{link query}])
-                   :children
-                   first
-                   (assoc :query-root true))]
-    #_(pprint local)
-    #_(pprint link)
-    #_(pprint ast)
-    #_(pprint (om/query->ast [{link query}]))
-    {:value local
-     :remote (first (:children (om/query->ast [{link query}])))}))
+        local (when link (om/db->tree query (get-in st link) st))
+        remote (when link (first (:children (om/query->ast [{link query}]))))]
+    (cond-> {:value local}
+      remote (assoc :remote remote))))
 
 (defmulti mutate om/dispatch)
 
@@ -92,10 +85,9 @@
     {:action #(swap! state
                 (fn [state]
                   (navigated-to page-id
-                    (update-in state [:app/routing :data] assoc
-                               :route/args args
-                               :app/current-page [page-id :data])
-                    (navigated-to page-id state))))}))
+                    (assoc state
+                           :app/current-page page-id
+                           :route/args args))))}))
 
 (defonce parser
-  (om/parser {:read read :mutate mutate}))
+  (om/parser {:read routing-read :mutate mutate}))

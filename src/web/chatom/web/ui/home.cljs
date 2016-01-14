@@ -5,13 +5,9 @@
             [cljs.pprint :refer [pprint]]))
 
 (defui HomePage
-  static om/Ident
-  (ident [this props]
-    [(:id props) :data])
   static om/IQuery
   (query [this]
-    [:id ;every page must request its id or it won't get props
-     {:user/rooms (om/get-query room-list/Room)}
+    [{:user/rooms (om/get-query room-list/Room)}
      {:app/rooms (om/get-query room-list/Room)}])
   Object
   (render [this]

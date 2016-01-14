@@ -5,22 +5,20 @@
             [cljs.pprint :refer [pprint]]))
 
 (defui Navbar
-  static om/Ident
-  (ident [this props]
-    [:app/routing :data])
   static om/IQuery
   (query [this]
-    [{:app/current-page [:id]}])
+    '[[:app/current-page _]])
   Object
   (render [this]
     (let [{:keys [:app/current-page] :as props} (om/props this)
           nav-links [[:page/home "Home"]
                      [:page/about "About"]]]
+      (pprint props)
       (html
        [:nav.navbar
         [:ul
          (for [[page-id text] nav-links
-               :let [active? (= page-id (:id current-page))]]
+               :let [active? (= page-id current-page)]]
            [:li {:key page-id
                  :class (when active? "active")}
             [:a {:href (routes/path-for page-id)} text]])]]))))

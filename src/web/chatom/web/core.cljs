@@ -16,7 +16,7 @@
 (def remote-url "/api")
 
 (defonce app-state
-  (atom state/init-data))
+  (atom state/init-data #_state/mock-data))
 
 (defn post-remote [data cb]
   (.send XhrIo remote-url
@@ -29,40 +29,30 @@
          (transit/write (om-transit/writer) data)
          #js {"Content-Type" "application/transit+json"}))
 
+(def base-query
+  "This is the query used to normalize the client database. Because
+   it is desirable that routing have no impact on the database
+   format, we can't use the automatic normalization facilities
+   provided by om out of the box."
+  (into (om/get-query ui/RootView)
+    (mapcat om/get-query (vals pages/page-id->component))))
+
 (defn normalize [value]
   (if (and (vector? value)
            (not (empty? value)))
-    (map #(om/tree->db ui/RootView % true) value)
-    (om/tree->db ui/RootView value true)))
+    (map #(om/tree->db base-query #_ui/RootView % true) value)
+    (om/tree->db base-query #_ui/RootView value true)))
 
 (defn send [remotes merge-results]
-  ;; (println "reconciler send function called with remotes:")
-  ;; (pprint remotes)
-  #_(let [full-query (:remote remotes)
+  (let [full-query (:remote remotes)
         {:keys [query rewrite] :as res} (om/process-roots full-query)]
-    (post-remote query
-                 (fn [response]
-                   (let [restructured-response (rewrite response)]
-                     (println "---------")
-                     ;; (pprint res)
-                     (pprint full-query)
-                     (pprint query)
-
-                   ;;   (pprint response)
-                     #_(pprint restructured-response)
-                     (println "----------")))))
-
-  (when-let [query (:remote remotes)]
-    (post-remote query #(do
-                          #_(println "remote res:")
-                          #_(pprint %)
-                          (merge-results %)))))
+    (post-remote query #(merge-results (normalize %)))))
 
 (defonce reconciler
   (om/reconciler
    {:state app-state
     :parser parser/parser
-    :normalize true
+    :normalize nil
     :remotes [:remote]
     :send send}))
 
