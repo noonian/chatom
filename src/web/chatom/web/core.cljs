@@ -46,7 +46,11 @@
 (defn send [remotes merge-results]
   (let [full-query (:remote remotes)
         {:keys [query rewrite] :as res} (om/process-roots full-query)]
-    (post-remote query #(merge-results (normalize %)))))
+
+    (post-remote query #(do
+                          ;; (pprint %)
+                          (pprint (rewrite (normalize %)))
+                          (merge-results (normalize %))))))
 
 (defonce reconciler
   (om/reconciler

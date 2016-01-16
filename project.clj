@@ -84,6 +84,9 @@
                            :main chatom.core
                            :optimizations :advanced
                            :pretty-print false}}]}
+
+  :repl-options {:print clojure.pprint/pprint
+                 :prompt (fn [ns] (str "'ns:" ns " - how may I serve you master? "))}
   :figwheel {:css-dirs ["resources/public/css"]}
   :garden {:builds [{:id "dev"
                      :source-paths ["src/style"]

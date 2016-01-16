@@ -7,13 +7,13 @@
 (defui Navbar
   static om/IQuery
   (query [this]
-    '[[:app/current-page _]])
+    '[:app/current-page])
   Object
   (render [this]
     (let [{:keys [:app/current-page] :as props} (om/props this)
           nav-links [[:page/home "Home"]
                      [:page/about "About"]]]
-      (pprint props)
+      ;; (pprint props)
       (html
        [:nav.navbar
         [:ul

@@ -9,7 +9,7 @@
     [:room/by-id (:id props)])
   static om/IQuery
   (query [this]
-    [:id :roomname :messages])
+    [:id :roomname {:messages ['*]}])
   Object
   (render [this]
     (let [{:keys [roomname messages] :as props} (om/props this)]
@@ -29,10 +29,11 @@
     [{:app/current-room (om/get-query Room)}])
   Object
   (render [this]
-    (let [{:keys [:app/current-room]} (om/props this)]
+    (let [{:keys [:app/current-room] :as props} (om/props this)]
+      ;; (pprint props)
       (html
        [:div.page#room-page
         "this is the room page"
-        #_(room current-room)
+        (room current-room)
         #_(when-not (empty? rooms)
           (room (first rooms)))]))))

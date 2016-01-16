@@ -13,7 +13,7 @@
 
 (defn page-joins
   ([page-queries]
-   (for [[page-id query] pages/page-id->query
+   (for [[page-id query] page-queries
          :when (not (nil? query))]
      ;; each page is represented as a join
      {page-id query}))
@@ -29,7 +29,11 @@
   Object
   (initLocalState [this]
     (letfn [(on-route-change [match]
-              (om/transact! this `[(app/set-page! ~match) ~(:handler match)]))]
+              (om/transact! this `[(app/set-page! ~{:handler (:handler match)
+                                                    :route-params (:route-params match)
+                                                    :component this} #_match)
+                                   ~(:handler match)
+                                   ~(om/get-query this)]))]
       {:html5-history (pushy/pushy on-route-change #_(nav-handler this) routes/match-route)}))
   (componentWillMount [this]
     (pushy/start! (om/get-state this :html5-history)))
@@ -39,6 +43,7 @@
     (let [{:keys [:app/current-page navbar] :as props} (om/props this)
           render-page (pages/page-id->factory current-page)
           page-data (get props current-page)]
+      (pprint props)
       (html
        [:div
         (navbar/navbar navbar)

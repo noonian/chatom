@@ -1,6 +1,7 @@
 (ns chatom.parser
   (:require [om.next.server :as om]
             [chatom.db.room :as room]
+            [chatom.db.queries.room :as q]
             [clojure.pprint :refer [pprint]])
   (:refer-clojure :exclude [read]))
 
@@ -12,12 +13,23 @@
 
 (defmethod read :default
   [{:keys [db query] :as env} key params]
+  (println "---------------------")
+  (println "default read called")
+  (pprint key)
+  (pprint env)
+  (println "---------------------")
   {:value :not-found})
 
 (defmethod read :app/rooms
   [{:keys [db query]} key params]
   (let [rooms (into [] (room/list db))]
     {:value rooms}))
+
+(defmethod read :room/by-id
+  [{:keys [db key query]} _ params]
+  (let [[_ room-id] key]
+    (pprint (q/om->sql query))
+    {:value (first (room/list db))}))
 
 (defmethod read :room/messages
   [env key params]

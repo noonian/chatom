@@ -17,44 +17,42 @@
   (let [env' {:state state}
         local-val (parser env' query)
         remote-query (parser env' query :remote)]
+    ;; (pprint remote-query)
     (cond-> {:value local-val}
       (seq remote-query) (assoc :remote (assoc ast :query remote-query)))))
 
 (defn routing-read [{:keys [parser state query ast] :as env} key params]
   (let [st @state
         current-page (:app/current-page st)]
-    (println current-page)
     (cond
-
       (= key current-page) (query-from-root env)
-
       (contains? pages/page-id->component key) {}
-
-      :else
-      (read env key params))))
+      :else (read env key params))))
 
 (defmethod read :default
-  [{:keys [state db query ast]} key params]
-  (let [st (or db @state)]
+  [{:keys [parser state query ast]} key params]
+  (let [st @state]
     (if-let [[_ v] (find st key)]
-      (let [val (denormalize query v @state)]
-        {:value val})
-      (do
-        {:remote (assoc ast :query-root true)}))))
+      {:value (denormalize query v st)}
+      {:remote (assoc ast :query-root true)})))
 
 (defmethod read :navbar
   [env _ _]
   (query-from-root env))
 
-(def current-page-path [:app/routing :data :app/current-page])
-
 (defmethod read :app/current-room
   [{:keys [parser state query ast] :as env} key params]
   (let [st @state
         link (:app/current-room st)
+        ;; _ (pprint link)
         env {:state state}
         local (when link (om/db->tree query (get-in st link) st))
-        remote (when link (first (:children (om/query->ast [{link query}]))))]
+        remote (when link
+                 (-> (first (:children (om/query->ast [{link query}])))
+                     (assoc :query-root true
+                            #_#_:key :room/by-id)))]
+    ;; (pprint local)
+    ;; (pprint remote)
     (cond-> {:value local}
       remote (assoc :remote remote))))
 
@@ -74,20 +72,22 @@
 (defmethod navigated-to :page/room
   [_ state]
   (println "navigated to :page/room")
-  (let [room-id (long (get-in state [:app/routing :data :route/args :id]))]
+  (let [room-id (long (get-in state [:route/args :id]))]
     (assoc state :app/current-room [:room/by-id room-id])))
 
 ;; params will me a bidi match
 (defmethod mutate 'app/set-page!
   [{:keys [state]} key params]
   (let [page-id (:handler params)
-        args (:route-params params)]
-    {:action #(swap! state
-                (fn [state]
-                  (navigated-to page-id
-                    (assoc state
-                           :app/current-page page-id
-                           :route/args args))))}))
+        args (:route-params params)
+        c (:component params)]
+    {:action #(do
+                (swap! state
+                  (fn [state]
+                    (navigated-to page-id
+                      (assoc state
+                             :app/current-page page-id
+                             :route/args args)))))}))
 
 (defonce parser
   (om/parser {:read routing-read :mutate mutate}))
